@@ -59,7 +59,8 @@ export default {
     clearInterval(this.interval);
   },
   methods: {
-    logout() {
+    async logout() {
+      await this.$store.dispatch('logout');
       this.$router.push('/login?message=logout');
       if (this.dropdown && this.dropdown.destroy) {
         this.dropdown.destroy();

@@ -30,7 +30,8 @@
         >Введите пароль</small>
         <small class="helper-text invalid"
                v-if="$v.password.$dirty && !$v.password.minLength"
-        >Минимальная длина пароля {{$v.password.$params.minLength.min}} символов. Сейчам он {{password.length}}</small>
+        >Минимальная длина пароля {{ $v.password.$params.minLength.min }} символов. Сейчам он
+          {{ password.length }}</small>
       </div>
       <div class="input-field">
         <input
@@ -82,13 +83,13 @@ export default {
   }),
   validations: {
     email: {email, required},
-    password: {required, minLength:minLength(8)},
+    password: {required, minLength: minLength(8)},
     name: {required,},
     agree: {checked: v => v},
   },
   methods: {
-    submitHandler() {
-      if(this.$v.$invalid) {
+    async submitHandler() {
+      if (this.$v.$invalid) {
         this.$v.$touch()
         return
       }
@@ -97,7 +98,11 @@ export default {
         password: this.password,
         name: this.name,
       };
-      this.$router.push('/');
+      try {
+        await this.$store.dispatch('register', formData)
+        this.$router.push('/');
+      } catch (e) {
+      }
     },
   },
 }

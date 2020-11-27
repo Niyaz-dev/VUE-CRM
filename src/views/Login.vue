@@ -11,10 +11,10 @@
         >
         <label for="email">Email</label>
         <small class="helper-text invalid"
-        v-if="$v.email.$dirty && !$v.email.required"
+               v-if="$v.email.$dirty && !$v.email.required"
         >Поле email не должно быть пустым</small>
         <small class="helper-text invalid"
-        v-else-if="$v.email.$dirty && !$v.email.email"
+               v-else-if="$v.email.$dirty && !$v.email.email"
         >Введите корректный email</small>
       </div>
       <div class="input-field">
@@ -30,7 +30,8 @@
         >Введите пароль</small>
         <small class="helper-text invalid"
                v-if="$v.password.$dirty && !$v.password.minLength"
-        >Минимальная длина пароля {{$v.password.$params.minLength.min}} символов. Сейчам он {{password.length}}</small>
+        >Минимальная длина пароля {{ $v.password.$params.minLength.min }} символов. Сейчам он
+          {{ password.length }}</small>
       </div>
     </div>
     <div class="card-action">
@@ -64,24 +65,27 @@ export default {
   }),
   validations: {
     email: {email, required},
-    password: {required, minLength:minLength(8)},
+    password: {required, minLength: minLength(8)},
   },
   mounted() {
-    if(messages[this.$route.query.message]) {
+    if (messages[this.$route.query.message]) {
       this.$message(messages[this.$route.query.message])
     }
   },
   methods: {
-    submitHandler() {
-      if(this.$v.$invalid) {
+    async submitHandler() {
+      if (this.$v.$invalid) {
         this.$v.$touch()
         return
       }
       const formData = {
         email: this.email,
         password: this.password,
-        };
-      this.$router.push('/');
+      };
+      try {
+        await this.$store.dispatch('login', formData);
+        this.$router.push('/');
+      } catch (e) {}
     },
   }
 };
