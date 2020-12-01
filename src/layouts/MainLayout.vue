@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="app-main-layout">
+    <Loader v-if="loading"/>
+    <div class="app-main-layout" v-else>
       <Navbar @click="isOpen=!isOpen"/>
       <Sidebar v-model="isOpen"/>
 
@@ -25,12 +26,20 @@ import Sidebar from "@/components/app/Sidebar";
 
 export default {
   name: 'MainLayout',
-  data: ()=> ({
+  data: () => ({
     isOpen: true,
+    loading: true,
   }),
   components: {
     Navbar, Sidebar
-  }
+  },
+  async mounted() {
+    if (!Object.keys(this.$store.getters.info).length) (
+      await this.$store.dispatch('fetchInfo')
+    )
+
+    this.loading = false;
+  },
 };
 </script>
 
